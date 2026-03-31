@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THORNS — Crown Yourself</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black:   #080808;
+  --off-black: #111111;
+  --white:   #f8f5ee;
+  --cream:   #ede9df;
+  --gold:    #c9a84c;
+  --gold-light: #e4c270;
+  --gold-pale: #f0d898;
+  --grey:    #888880;
+  --mid:     #444440;
+  --border:  rgba(201,168,76,0.18);
+  --border-subtle: rgba(248,245,238,0.08);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--black);
+  color:var(--white);
+  font-family:'Barlow',sans-serif;
+  font-size:14px;
+  line-height:1.6;
+  overflow-x:hidden;
+  cursor:default;
+}
+
+/* Custom cursor */
+body{cursor:none}
+.cursor{
+  position:fixed;width:10px;height:10px;
+  background:var(--gold);border-radius:50%;
+  pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:transform 0.1s,width 0.25s,height 0.25s,background 0.25s;
+  mix-blend-mode:difference;
+}
+.cursor-ring{
+  position:fixed;width:36px;height:36px;
+  border:1px solid var(--gold);border-radius:50%;
+  pointer-events:none;z-index:9998;
+  transform:translate(-50%,-50%);
+  transition:transform 0.18s ease,width 0.3s,height 0.3s,opacity 0.3s;
+  opacity:0.5;
+}
+
+/* ── GRAIN OVERLAY ── */
+.grain{
+  position:fixed;inset:0;z-index:9997;pointer-events:none;
+  opacity:0.035;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 52px;
+  transition:background 0.4s,border-color 0.4s;
+  border-bottom:1px solid transparent;
+}
+nav.scrolled{
+  background:rgba(8,8,8,0.96);
+  backdrop-filter:blur(16px);
+  border-color:var(--border);
+}
+
+.nav-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:700;font-size:26px;
+  letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--white);text-decoration:none;
+  position:relative;
+}
+.nav-logo span{color:var(--gold)}
+
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{
+  color:var(--grey);text-decoration:none;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;
+  transition:color 0.2s;position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-3px;left:0;right:0;
+  height:1px;background:var(--gold);
+  transform:scaleX(0);transform-origin:left;transition:transform 0.3s;
+}
+.nav-links a:hover{color:var(--white)}
+.nav-links a:hover::after{transform:scaleX(1)}
+
+.nav-right{display:flex;align-items:center;gap:20px}
+
+.nav-cart-btn{
+  display:flex;align-items:center;gap:10px;
+  background:transparent;border:1px solid var(--gold);
+  color:var(--gold);padding:10px 22px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;
+  cursor:none;transition:all 0.25s;
+}
+.nav-cart-btn:hover{background:var(--gold);color:var(--black)}
+
+.cart-badge{
+  background:var(--gold);color:var(--black);
+  border-radius:50%;width:18px;height:18px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:800;
+}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;position:relative;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:120px 52px 80px;
+  overflow:hidden;
+}
+
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.09) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(201,168,76,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 10% 60%, rgba(201,168,76,0.04) 0%, transparent 60%);
+}
+
+.hero-lines{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+  background-size:80px 80px;
+}
+
+.hero-eyebrow{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:600;letter-spacing:0.35em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:28px;
+  display:flex;align-items:center;gap:16px;
+  animation:fadeDown 1s ease 0.2s both;
+}
+.hero-eyebrow::before,.hero-eyebrow::after{
+  content:'';display:block;height:1px;width:40px;background:var(--gold);opacity:0.6;
+}
+
+.hero-title{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:700;
+  font-size:clamp(72px,12vw,160px);
+  line-height:0.88;letter-spacing:0.06em;
+  text-transform:uppercase;text-align:center;
+  margin-bottom:8px;
+  animation:fadeUp 1s ease 0.35s both;
+}
+.hero-title-gold{
+  font-style:italic;
+  background:linear-gradient(135deg,var(--gold-pale) 0%,var(--gold) 40%,var(--gold-light) 70%,var(--gold-pale) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+.hero-tagline{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-weight:300;
+  font-size:clamp(18px,2.5vw,26px);
+  color:var(--grey);letter-spacing:0.1em;
+  margin-bottom:52px;text-align:center;
+  animation:fadeUp 1s ease 0.5s both;
+}
+
+.hero-ctas{
+  display:flex;gap:16px;flex-wrap:wrap;justify-content:center;
+  animation:fadeUp 1s ease 0.65s both;
+}
+
+.btn-primary{
+  background:var(--gold);color:var(--black);border:none;
+  padding:16px 40px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;font-size:13px;letter-spacing:0.18em;text-transform:uppercase;
+  cursor:none;text-decoration:none;display:inline-flex;align-items:center;gap:10px;
+  transition:background 0.25s,transform 0.2s;
+}
+.btn-primary:hover{background:var(--gold-light);transform:translateY(-2px)}
+
+.btn-outline{
+  background:transparent;color:var(--white);
+  border:1px solid rgba(248,245,238,0.25);
+  padding:16px 40px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:600;font-size:13px;letter-spacing:0.18em;text-transform:uppercase;
+  cursor:none;text-decoration:none;display:inline-flex;align-items:center;gap:10px;
+  transition:border-color 0.25s,color 0.25s,transform 0.2s;
+}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+
+.hero-scroll{
+  position:absolute;bottom:40px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  color:var(--grey);font-size:10px;letter-spacing:0.3em;text-transform:uppercase;
+  animation:fadeUp 1s ease 1s both;
+}
+.scroll-line{
+  width:1px;height:48px;background:linear-gradient(var(--gold),transparent);
+  animation:scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse{
+  0%,100%{opacity:0.3;transform:scaleY(1)}
+  50%{opacity:1;transform:scaleY(0.6)}
+}
+
+/* ── MARQUEE ── */
+.marquee-wrap{
+  overflow:hidden;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:16px 0;background:rgba(201,168,76,0.03);
+}
+.marquee-track{
+  display:flex;gap:0;
+  animation:marquee 28s linear infinite;
+  white-space:nowrap;
+}
+.marquee-track:hover{animation-play-state:paused}
+.marquee-item{
+  display:inline-flex;align-items:center;gap:24px;
+  padding:0 40px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--gold);opacity:0.7;
+}
+.marquee-dot{width:4px;height:4px;background:var(--gold);border-radius:50%;opacity:0.5}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── SECTION HEADERS ── */
+.section-label{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:600;letter-spacing:0.35em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:12px;
+  display:flex;align-items:center;gap:12px;
+}
+.section-label::before{content:'';display:block;width:28px;height:1px;background:var(--gold)}
+
+.section-title{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:700;font-size:clamp(36px,5vw,58px);
+  letter-spacing:-0.01em;line-height:1.05;
+  margin-bottom:16px;
+}
+.section-title em{font-style:italic;color:var(--gold)}
+
+/* ── SHOP ── */
+.shop{padding:100px 52px 120px}
+
+.shop-top{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  margin-bottom:52px;padding-bottom:24px;
+  border-bottom:1px solid var(--border-subtle);
+  flex-wrap:wrap;gap:24px;
+}
+
+.season-tabs{
+  display:flex;gap:0;border:1px solid var(--border);
+}
+.season-tab{
+  padding:10px 24px;background:transparent;
+  border:none;border-right:1px solid var(--border);
+  color:var(--grey);
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;
+  cursor:none;transition:all 0.2s;
+}
+.season-tab:last-child{border-right:none}
+.season-tab.active{background:var(--gold);color:var(--black)}
+.season-tab:not(.active):hover{color:var(--white);background:rgba(201,168,76,0.06)}
+
+/* Filters */
+.shop-filters{
+  display:flex;gap:32px;margin-bottom:48px;flex-wrap:wrap;
+}
+.filter-group{display:flex;flex-direction:column;gap:10px}
+.filter-label-sm{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--mid);
+}
+.filter-pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{
+  padding:5px 14px;background:transparent;
+  border:1px solid var(--border-subtle);
+  color:var(--grey);
+  font-family:'Barlow',sans-serif;font-size:11px;letter-spacing:0.06em;
+  cursor:none;transition:all 0.2s;
+}
+.pill:hover,.pill.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.06)}
+
+/* Product grid */
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(290px,1fr));
+  gap:1px;background:var(--border-subtle);
+}
+
+.product-card{
+  background:var(--off-black);
+  position:relative;overflow:hidden;
+  transition:background 0.3s;
+}
+.product-card:hover{background:#161616}
+.product-card.hidden{display:none}
+
+.product-img{
+  width:100%;aspect-ratio:1/1;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* Premium product art */
+.prod-art{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.prod-art-inner{
+  width:160px;height:120px;
+  position:relative;display:flex;align-items:center;justify-content:center;
+}
+
+/* Wave cap silhouette shapes via CSS */
+.cap-shape{
+  width:120px;height:70px;position:relative;
+}
+.cap-dome{
+  position:absolute;bottom:0;left:0;right:0;
+  height:64px;
+  border-radius:60px 60px 0 0;
+}
+.cap-band{
+  position:absolute;bottom:0;left:-4px;right:-4px;height:14px;
+  border-radius:2px;
+}
+.cap-brim{
+  position:absolute;bottom:-4px;left:-8px;right:-8px;height:10px;
+  border-radius:40px;opacity:0.5;
+}
+.product-season-badge{
+  position:absolute;top:16px;left:16px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;
+  padding:4px 10px;
+}
+.badge-new{background:var(--gold);color:var(--black)}
+.badge-seasonal{background:var(--white);color:var(--black)}
+.badge-sale{background:#c0392b;color:var(--white)}
+.badge-limited{background:var(--off-black);color:var(--gold);border:1px solid var(--gold)}
+
+.product-overlay{
+  position:absolute;inset:0;
+  background:rgba(8,8,8,0.55);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity 0.3s;
+}
+.product-card:hover .product-overlay{opacity:1}
+.quick-add-btn{
+  background:var(--gold);color:var(--black);border:none;
+  padding:13px 28px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;
+  cursor:none;
+  transform:translateY(10px);opacity:0;
+  transition:transform 0.3s,opacity 0.3s,background 0.2s;
+}
+.product-card:hover .quick-add-btn{transform:translateY(0);opacity:1}
+.quick-add-btn:hover{background:var(--gold-light)}
+
+.product-info{
+  padding:22px 24px;
+  border-top:1px solid var(--border-subtle);
+}
+.product-row-top{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  margin-bottom:6px;
+}
+.product-name{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:600;font-size:18px;
+  letter-spacing:0.01em;line-height:1.2;
+}
+.product-price{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;font-size:17px;
+  color:var(--gold);letter-spacing:0.04em;
+}
+.product-desc{
+  font-size:12px;color:var(--grey);line-height:1.6;margin-bottom:14px;
+}
+.product-meta-row{
+  display:flex;justify-content:space-between;align-items:center;
+}
+.product-colour-swatch{
+  display:flex;gap:6px;
+}
+.swatch{
+  width:14px;height:14px;border-radius:50%;
+  border:1px solid rgba(248,245,238,0.15);
+}
+.product-sizes-row{
+  display:flex;gap:4px;
+}
+.size-chip{
+  padding:3px 8px;border:1px solid var(--border-subtle);
+  font-size:10px;letter-spacing:0.08em;color:var(--grey);
+}
+
+/* ── SEASONAL BANNER ── */
+.seasonal-banner{
+  margin:80px 52px;
+  padding:72px 64px;
+  background:linear-gradient(135deg,#0e0e0e 0%,#1a1608 50%,#0e0e0e 100%);
+  border:1px solid var(--border);
+  position:relative;overflow:hidden;
+  display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;
+}
+.seasonal-banner::before{
+  content:'';position:absolute;
+  top:-80px;right:-80px;
+  width:320px;height:320px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(201,168,76,0.12) 0%,transparent 70%);
+}
+.seasonal-text{position:relative;z-index:1}
+.seasonal-season{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:600;letter-spacing:0.35em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:16px;
+}
+.seasonal-title{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:700;font-size:clamp(40px,4vw,56px);
+  line-height:0.95;letter-spacing:0.02em;margin-bottom:20px;
+}
+.seasonal-title em{font-style:italic;color:var(--gold)}
+.seasonal-copy{
+  color:var(--grey);font-size:14px;line-height:1.8;max-width:380px;margin-bottom:32px;
+}
+.seasonal-products{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;position:relative;z-index:1;
+}
+.seasonal-card{
+  background:rgba(201,168,76,0.04);
+  border:1px solid var(--border);
+  padding:24px;cursor:none;
+  transition:background 0.25s,border-color 0.25s;
+}
+.seasonal-card:hover{background:rgba(201,168,76,0.09);border-color:var(--gold)}
+.seasonal-card-name{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:600;font-size:16px;margin-bottom:4px;
+}
+.seasonal-card-price{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;font-size:14px;color:var(--gold);margin-bottom:12px;
+}
+.seasonal-card-add{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--grey);background:none;border:none;cursor:none;
+  padding:0;transition:color 0.2s;
+}
+.seasonal-card:hover .seasonal-card-add{color:var(--gold)}
+
+/* ── ABOUT ── */
+.about{
+  padding:100px 52px 120px;
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+}
+.about-visual{
+  position:relative;
+  aspect-ratio:4/5;
+  background:#111;
+  border:1px solid var(--border);
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.about-vis-inner{
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+  width:100%;height:100%;
+}
+/* Big decorative letter */
+.about-bg-letter{
+  position:absolute;
+  font-family:'Cormorant Garamond',serif;
+  font-weight:700;font-style:italic;
+  font-size:320px;line-height:1;
+  color:rgba(201,168,76,0.06);
+  user-select:none;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  letter-spacing:0;
+}
+.about-cap-display{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.about-gold-line{
+  position:absolute;bottom:0;left:0;right:0;
+  height:3px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.about-gold-corner{
+  position:absolute;width:40px;height:40px;
+  border-color:var(--gold);border-style:solid;border-width:0;
+}
+.about-gold-corner.tl{top:20px;left:20px;border-top-width:1px;border-left-width:1px}
+.about-gold-corner.br{bottom:20px;right:20px;border-bottom-width:1px;border-right-width:1px}
+
+.about-text{padding:20px 0}
+.about-quote{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-weight:300;
+  font-size:28px;line-height:1.4;
+  color:var(--gold-pale);margin-bottom:32px;
+  padding-left:24px;
+  border-left:2px solid var(--gold);
+}
+.about-body{
+  color:var(--grey);font-size:14px;line-height:1.9;margin-bottom:32px;
+}
+.about-pillars{
+  display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:40px;
+}
+.pillar{
+  padding:20px;border:1px solid var(--border-subtle);
+  transition:border-color 0.25s;
+}
+.pillar:hover{border-color:var(--gold)}
+.pillar-icon{
+  font-size:20px;margin-bottom:8px;
+}
+.pillar-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:4px;
+}
+.pillar-desc{font-size:12px;color:var(--grey);line-height:1.6}
+
+/* ── NEWSLETTER ── */
+.newsletter{
+  margin:0 52px 100px;
+  padding:80px 72px;
+  background:var(--white);
+  color:var(--black);
+  position:relative;overflow:hidden;
+  display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;
+}
+.newsletter::before{
+  content:'THORNS';
+  position:absolute;right:-20px;top:50%;transform:translateY(-50%);
+  font-family:'Cormorant Garamond',serif;
+  font-weight:700;font-style:italic;
+  font-size:140px;color:rgba(0,0,0,0.04);
+  line-height:1;white-space:nowrap;user-select:none;
+}
+.nl-label{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:12px;
+}
+.nl-title{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:700;font-size:clamp(32px,4vw,48px);
+  line-height:1;letter-spacing:-0.01em;margin-bottom:16px;color:var(--black);
+}
+.nl-sub{
+  font-size:14px;color:#555;line-height:1.8;
+}
+.nl-form{display:flex;flex-direction:column;gap:12px;position:relative;z-index:1}
+.nl-input{
+  background:transparent;border:none;
+  border-bottom:2px solid rgba(0,0,0,0.15);
+  padding:14px 0;font-family:'Barlow',sans-serif;font-size:14px;
+  color:var(--black);outline:none;transition:border-color 0.25s;
+}
+.nl-input::placeholder{color:#aaa}
+.nl-input:focus{border-color:var(--gold)}
+.nl-submit{
+  background:var(--black);color:var(--white);border:none;
+  padding:16px 40px;width:fit-content;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;font-size:13px;letter-spacing:0.18em;text-transform:uppercase;
+  cursor:none;margin-top:8px;
+  transition:background 0.25s,transform 0.2s;
+}
+.nl-submit:hover{background:var(--gold);color:var(--black);transform:translateY(-2px)}
+.nl-disclaimer{font-size:11px;color:#aaa;margin-top:8px}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--border);
+  padding:52px;
+  display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:40px;
+}
+.footer-brand .nav-logo{display:block;margin-bottom:12px;font-size:22px}
+.footer-tagline{font-size:12px;color:var(--grey);line-height:1.7;max-width:180px}
+.footer-col-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:16px;
+}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-links a{
+  color:var(--grey);text-decoration:none;font-size:13px;transition:color 0.2s;
+}
+.footer-links a:hover{color:var(--white)}
+.footer-bottom{
+  border-top:1px solid var(--border-subtle);
+  margin:0 52px;padding:24px 0;
+  display:flex;justify-content:space-between;align-items:center;
+  color:var(--grey);font-size:11px;letter-spacing:0.05em;
+}
+
+/* ── CART DRAWER ── */
+.cart-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.7);
+  z-index:600;opacity:0;pointer-events:none;transition:opacity 0.35s;
+}
+.cart-overlay.open{opacity:1;pointer-events:all}
+
+.cart-drawer{
+  position:fixed;top:0;right:0;bottom:0;width:460px;max-width:95vw;
+  background:#0c0c0c;border-left:1px solid var(--border);
+  z-index:601;display:flex;flex-direction:column;
+  transform:translateX(100%);
+  transition:transform 0.45s cubic-bezier(0.4,0,0.2,1);
+}
+.cart-drawer.open{transform:translateX(0)}
+
+.cart-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:28px 36px;border-bottom:1px solid var(--border);
+}
+.cart-head-title{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:700;font-size:22px;letter-spacing:0.04em;
+}
+.cart-x{
+  background:none;border:1px solid var(--border);color:var(--white);
+  width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  cursor:none;font-size:16px;transition:all 0.2s;
+}
+.cart-x:hover{border-color:var(--gold);color:var(--gold)}
+
+.cart-body{flex:1;overflow-y:auto;padding:28px 36px;display:flex;flex-direction:column;gap:24px}
+.cart-empty-state{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:var(--grey);gap:12px;
+}
+.empty-icon{
+  font-size:40px;opacity:0.2;margin-bottom:8px;
+}
+.empty-text{font-size:12px;letter-spacing:0.15em;text-transform:uppercase}
+
+.cart-item{display:flex;gap:16px;padding-bottom:24px;border-bottom:1px solid var(--border-subtle)}
+.cart-item-thumb{
+  width:80px;height:80px;flex-shrink:0;
+  background:#1a1a1a;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:28px;
+}
+.cart-item-details{flex:1}
+.cart-item-name{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:600;font-size:16px;margin-bottom:4px;
+}
+.cart-item-variant{font-size:11px;color:var(--grey);letter-spacing:0.08em;margin-bottom:12px}
+.cart-item-row{display:flex;align-items:center;justify-content:space-between}
+.qty-wrap{display:flex;align-items:center;border:1px solid var(--border)}
+.qty-b{
+  width:30px;height:30px;background:none;border:none;
+  color:var(--white);cursor:none;font-size:14px;
+  display:flex;align-items:center;justify-content:center;
+  transition:color 0.15s;
+}
+.qty-b:hover{color:var(--gold)}
+.qty-val{
+  width:34px;text-align:center;font-size:13px;
+  border-left:1px solid var(--border);border-right:1px solid var(--border);
+  height:30px;display:flex;align-items:center;justify-content:center;
+}
+.item-price{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;font-size:16px;color:var(--gold);
+}
+.item-remove{
+  background:none;border:none;color:var(--grey);
+  font-size:11px;letter-spacing:0.1em;text-transform:uppercase;
+  cursor:none;padding:0;margin-top:8px;display:block;
+  transition:color 0.15s;
+}
+.item-remove:hover{color:#e74c3c}
+
+.cart-foot{padding:24px 36px;border-top:1px solid var(--border)}
+.cart-sub-row{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:20px;
+}
+.cart-sub-label{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--grey);
+}
+.cart-sub-amount{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:700;font-size:28px;color:var(--white);
+}
+.checkout-btn{
+  width:100%;background:var(--gold);color:var(--black);border:none;
+  padding:18px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;font-size:14px;letter-spacing:0.18em;text-transform:uppercase;
+  cursor:none;transition:background 0.25s,transform 0.2s;
+}
+.checkout-btn:hover{background:var(--gold-light);transform:translateY(-1px)}
+.cart-note-sm{
+  text-align:center;color:var(--grey);font-size:10px;letter-spacing:0.1em;margin-top:10px;
+}
+
+/* ── SIZE MODAL ── */
+.modal-wrap{
+  position:fixed;inset:0;background:rgba(0,0,0,0.8);
+  z-index:700;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity 0.25s;
+}
+.modal-wrap.open{opacity:1;pointer-events:all}
+.modal-box{
+  background:#101010;border:1px solid var(--border);
+  padding:44px;width:460px;max-width:92vw;
+  transform:scale(0.95) translateY(12px);
+  transition:transform 0.3s;
+}
+.modal-wrap.open .modal-box{transform:scale(1) translateY(0)}
+.modal-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px}
+.modal-prod-name{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:700;font-size:22px;letter-spacing:0.01em;
+}
+.modal-prod-price{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;font-size:18px;color:var(--gold);
+}
+.modal-size-label{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--grey);margin-bottom:12px;
+}
+.modal-size-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:28px;
+}
+.sz{
+  padding:12px 0;text-align:center;
+  border:1px solid var(--border-subtle);
+  font-family:'Barlow',sans-serif;font-size:12px;
+  color:var(--grey);cursor:none;transition:all 0.15s;
+}
+.sz:hover{border-color:var(--white);color:var(--white)}
+.sz.sel{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.06)}
+.modal-add{
+  width:100%;background:var(--gold);color:var(--black);border:none;
+  padding:16px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;font-size:13px;letter-spacing:0.18em;text-transform:uppercase;
+  cursor:none;transition:background 0.2s;
+}
+.modal-add:hover{background:var(--gold-light)}
+.modal-add:disabled{opacity:0.35;cursor:not-allowed}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:36px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--gold);color:var(--black);
+  padding:14px 32px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;
+  z-index:900;white-space:nowrap;
+  transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+
+.reveal{opacity:0;transform:translateY(32px);transition:opacity 0.8s ease,transform 0.8s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  nav{padding:18px 24px}
+  .nav-links{display:none}
+  .hero{padding:100px 24px 80px}
+  .shop{padding:72px 24px 80px}
+  .seasonal-banner{grid-template-columns:1fr;margin:40px 24px;padding:48px 32px}
+  .about{grid-template-columns:1fr;gap:48px;padding:72px 24px}
+  .about-visual{aspect-ratio:16/9}
+  .newsletter{grid-template-columns:1fr;gap:40px;margin:0 24px 72px;padding:52px 36px}
+  footer{grid-template-columns:1fr 1fr;padding:40px 24px;gap:32px}
+  .footer-bottom{margin:0 24px}
+}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#" class="nav-logo">THORN<span>S</span></a>
+  <ul class="nav-links">
+    <li><a href="#shop">Shop</a></li>
+    <li><a href="#seasonal">Seasonal</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#newsletter">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="nav-cart-btn" onclick="openCart()">
+      Bag <span class="cart-badge" id="cartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+  <div class="hero-eyebrow">Est. 2026 &nbsp;·&nbsp; London</div>
+  <h1 class="hero-title"><span class="hero-title-gold">Crown</span><br>Yourself.</h1>
+  <p class="hero-tagline">Wave caps built for those who move with purpose.</p>
+  <div class="hero-ctas">
+    <a href="#shop" class="btn-primary">Shop The Collection ↓</a>
+    <a href="#about" class="btn-outline">Our Story</a>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="marqueeTrack"></div>
+</div>
+
+<!-- SHOP -->
+<section class="shop" id="shop">
+  <div class="shop-top">
+    <div>
+      <div class="section-label">The Collection</div>
+      <h2 class="section-title">Wave Caps &amp; <em>Essentials</em></h2>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:12px">
+      <div class="season-tabs">
+        <button class="season-tab active" data-season="all" onclick="setSeason(this,'all')">All</button>
+        <button class="season-tab" data-season="core" onclick="setSeason(this,'core')">Core</button>
+        <button class="season-tab" data-season="seasonal" onclick="setSeason(this,'seasonal')">Seasonal</button>
+        <button class="season-tab" data-season="limited" onclick="setSeason(this,'limited')">Limited</button>
+      </div>
+      <span style="font-size:11px;color:var(--grey);letter-spacing:0.05em" id="resultsLabel">Showing all products</span>
+    </div>
+  </div>
+
+  <div class="shop-filters">
+    <div class="filter-group">
+      <div class="filter-label-sm">Colour</div>
+      <div class="filter-pills">
+        <button class="pill active" data-f="color" data-v="all">All</button>
+        <button class="pill" data-f="color" data-v="black">Black</button>
+        <button class="pill" data-f="color" data-v="white">White</button>
+        <button class="pill" data-f="color" data-v="grey">Grey</button>
+        <button class="pill" data-f="color" data-v="navy">Navy</button>
+        <button class="pill" data-f="color" data-v="tan">Tan</button>
+      </div>
+    </div>
+    <div class="filter-group">
+      <div class="filter-label-sm">Size</div>
+      <div class="filter-pills">
+        <button class="pill active" data-f="size" data-v="all">All</button>
+        <button class="pill" data-f="size" data-v="S/M">S/M</button>
+        <button class="pill" data-f="size" data-v="M/L">M/L</button>
+        <button class="pill" data-f="size" data-v="L/XL">L/XL</button>
+        <button class="pill" data-f="size" data-v="One Size">One Size</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="product-grid" id="productGrid"></div>
+</section>
+
+<!-- SEASONAL BANNER -->
+<section id="seasonal">
+  <div class="seasonal-banner reveal">
+    <div class="seasonal-text">
+      <div class="seasonal-season">Summer 2026 Drop</div>
+      <h2 class="seasonal-title">Heat<br><em>Season.</em></h2>
+      <p class="seasonal-copy">Lighter weaves, bold colours and breathable linings built for summer — without compromising the wave. Limited quantities. Once it's gone, it's gone.</p>
+      <a href="#shop" class="btn-primary" onclick="setSeason(document.querySelector('[data-season=seasonal]'),'seasonal');return false;">
+        View Seasonal Drop →
+      </a>
+    </div>
+    <div class="seasonal-products" id="seasonalCards"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-visual reveal">
+    <div class="about-vis-inner">
+      <div class="about-bg-letter">T</div>
+      <div class="about-cap-display">
+        <!-- Large decorative cap art -->
+        <svg width="200" height="140" viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="100" cy="110" rx="98" ry="18" fill="rgba(201,168,76,0.08)"/>
+          <path d="M10 105 Q10 30 100 28 Q190 30 190 105 Z" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+          <path d="M2 108 Q2 22 100 20 Q198 22 198 108" stroke="rgba(201,168,76,0.5)" stroke-width="1.5" fill="none"/>
+          <path d="M10 105 Q55 95 100 95 Q145 95 190 105" stroke="rgba(201,168,76,0.4)" stroke-width="1" fill="none"/>
+          <path d="M20 100 Q65 92 100 92 Q135 92 180 100" stroke="rgba(201,168,76,0.25)" stroke-width="1" fill="none"/>
+          <path d="M28 96 Q65 89 100 89 Q135 89 172 96" stroke="rgba(201,168,76,0.18)" stroke-width="1" fill="none"/>
+          <rect x="0" y="104" width="200" height="14" rx="4" fill="rgba(201,168,76,0.12)" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+          <text x="100" y="116" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="9" fill="rgba(201,168,76,0.7)" letter-spacing="3">THORNS</text>
+        </svg>
+        <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--gold);opacity:0.6;letter-spacing:0.2em">Crown Yourself</div>
+      </div>
+    </div>
+    <div class="about-gold-corner tl"></div>
+    <div class="about-gold-corner br"></div>
+    <div class="about-gold-line"></div>
+  </div>
+
+  <div class="about-text reveal">
+    <div class="section-label">The Brand</div>
+    <h2 class="section-title">Built on <em>Waves</em></h2>
+    <p class="about-quote">"The wave cap isn't an accessory — it's a statement of discipline."</p>
+    <p class="about-body">
+      Thorns was born from a simple truth: the wave cap is one of the most deliberate pieces of headwear in culture, and it deserved a brand that treated it that way. Clean construction, premium materials, and designs that sit as comfortably in the studio as they do on the street.
+      <br><br>
+      Every cap we make is designed to hold its shape, preserve your waves, and carry the Thorns name without needing to shout. The details are in the weave.
+    </p>
+    <div class="about-pillars">
+      <div class="pillar">
+        <div class="pillar-icon">✦</div>
+        <div class="pillar-name">Premium Craft</div>
+        <div class="pillar-desc">Velvet-lined interiors. Double-stitched seams. Built to last.</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">◈</div>
+        <div class="pillar-name">Wave-First Design</div>
+        <div class="pillar-desc">Every cap engineered to protect and define your wave pattern.</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">⬡</div>
+        <div class="pillar-name">Seasonal Drops</div>
+        <div class="pillar-desc">Limited seasonal collections that keep the range fresh.</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">◎</div>
+        <div class="pillar-name">Unisex Fit</div>
+        <div class="pillar-desc">Designed for everyone. The wave has no gender.</div>
+      </div>
+    </div>
+    <a href="#shop" class="btn-primary">Shop Now →</a>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section id="newsletter">
+  <div class="newsletter reveal">
+    <div>
+      <div class="nl-label">Stay Connected</div>
+      <h2 class="nl-title">First to<br>the Drop.</h2>
+      <p class="nl-sub">Get early access to new releases, seasonal collections and exclusive offers — straight to your inbox.</p>
+    </div>
+    <form class="nl-form" onsubmit="submitNewsletter(event)">
+      <input class="nl-input" type="text" placeholder="Your name" id="nlName">
+      <input class="nl-input" type="email" placeholder="Your email address" id="nlEmail" required>
+      <button class="nl-submit" type="submit">Join The Inner Circle →</button>
+      <div class="nl-disclaimer">No spam. Unsubscribe any time. We respect your privacy.</div>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <a href="#" class="nav-logo">THORN<span style="color:var(--gold)">S</span></a>
+    <p class="footer-tagline">Wave caps built for those who move with purpose. Crown yourself.</p>
+  </div>
+  <div>
+    <div class="footer-col-title">Shop</div>
+    <ul class="footer-links">
+      <li><a href="#shop">All Products</a></li>
+      <li><a href="#shop">Wave Caps</a></li>
+      <li><a href="#seasonal">Seasonal Drops</a></li>
+      <li><a href="#shop">Limited Edition</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="footer-col-title">Info</div>
+    <ul class="footer-links">
+      <li><a href="#about">About Thorns</a></li>
+      <li><a href="#newsletter">Contact Us</a></li>
+      <li><a href="#">Shipping & Returns</a></li>
+      <li><a href="#">Size Guide</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="footer-col-title">Follow</div>
+    <ul class="footer-links">
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">TikTok</a></li>
+      <li><a href="#">Twitter / X</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <span>© 2026 Thorns. All rights reserved.</span>
+  <span style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px">Crown Yourself.</span>
+</div>
+
+<!-- CART -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head">
+    <div class="cart-head-title">Your Bag</div>
+    <button class="cart-x" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cartBody"></div>
+  <div class="cart-foot" id="cartFoot" style="display:none">
+    <div class="cart-sub-row">
+      <span class="cart-sub-label">Total</span>
+      <span class="cart-sub-amount" id="cartTotal">£0</span>
+    </div>
+    <button class="checkout-btn" onclick="handleCheckout()">Proceed to Checkout →</button>
+    <div class="cart-note-sm">Free UK delivery on orders over £50</div>
+  </div>
+</div>
+
+<!-- SIZE MODAL -->
+<div class="modal-wrap" id="sizeModal" onclick="modalBgClick(event)">
+  <div class="modal-box">
+    <div class="modal-top">
+      <div>
+        <div class="modal-prod-name" id="mName"></div>
+        <div class="modal-prod-price" id="mPrice"></div>
+      </div>
+      <button class="cart-x" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-size-label">Select Size</div>
+    <div class="modal-size-grid" id="mSizes"></div>
+    <button class="modal-add" id="mAddBtn" onclick="addFromModal()" disabled>Choose a size first</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─── CURSOR ─── */
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cursor.style.left=mx+'px';cursor.style.top=my+'px';
+});
+(function animRing(){
+  rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+})();
+
+/* ─── NAV SCROLL ─── */
+window.addEventListener('scroll',()=>{
+  document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>40);
+});
+
+/* ─── MARQUEE ─── */
+const words=['Wave Caps','Premium Craft','Crown Yourself','Seasonal Drops','Limited Edition','Thorns','Built in London','Wave Culture'];
+const track=document.getElementById('marqueeTrack');
+const repeated=[...words,...words,...words,...words];
+track.innerHTML=repeated.map(w=>`<span class="marquee-item"><span class="marquee-dot"></span>${w}</span>`).join('');
+
+/* ─── PRODUCTS ─── */
+const products=[
+  {id:1,name:'Classic Thorns Wave Cap',price:28,season:'core',color:'black',sizes:['S/M','M/L','L/XL','One Size'],desc:'The OG. 360-wave compression with gold logo stitch.',badge:'New',emoji:'🖤',capColor:'#1a1a1a',bandColor:'#c9a84c'},
+  {id:2,name:'Ivory Velvet Wave Cap',price:32,season:'core',color:'white',sizes:['S/M','M/L','L/XL'],desc:'Luxe velvet finish. Classic silhouette. Velvet-lined interior.',badge:null,emoji:'🤍',capColor:'#e8e4db',bandColor:'#c9a84c'},
+  {id:3,name:'Shadow Grey Wave Cap',price:28,season:'core',color:'grey',sizes:['S/M','M/L','L/XL','One Size'],desc:'Muted and minimal. Goes with everything.',badge:null,emoji:'🩶',capColor:'#555',bandColor:'#888'},
+  {id:4,name:'Midnight Navy Wave Cap',price:30,season:'core',color:'navy',sizes:['M/L','L/XL','One Size'],desc:'Deep navy with tonal stitching. Premium brushed cotton.',badge:null,emoji:'💙',capColor:'#1a2040',bandColor:'#3a4a8a'},
+  {id:5,name:'Summer Sand Wave Cap',price:34,season:'seasonal',color:'tan',sizes:['S/M','M/L','L/XL'],desc:'Summer 2026 drop. Breathable linen blend. Limited run.',badge:'Seasonal',emoji:'🌿',capColor:'#c8a96e',bandColor:'#8a6a3a'},
+  {id:6,name:'Heat Wave White Cap',price:34,season:'seasonal',color:'white',sizes:['S/M','M/L'],desc:'Summer exclusive. Lightweight cotton with UV lining.',badge:'Seasonal',emoji:'☀️',capColor:'#f0ece3',bandColor:'#e4c270'},
+  {id:7,name:'Gold Edition Wave Cap',price:48,season:'limited',color:'black',sizes:['M/L','L/XL'],desc:'24k gold embroidery. Satin interior. Drop 001.',badge:'Limited',emoji:'✨',capColor:'#111',bandColor:'#c9a84c'},
+  {id:8,name:'Thorns Skull Cap',price:22,season:'core',color:'black',sizes:['S/M','M/L','L/XL','One Size'],desc:'Fitted skull cap. Double-layer compression. Everyday essential.',badge:'New',emoji:'⬛',capColor:'#0f0f0f',bandColor:'#333'},
+];
+
+let cart=[];
+let filters={color:'all',size:'all',season:'all'};
+let modalProduct=null,selectedSize=null;
+
+function renderProducts(){
+  const grid=document.getElementById('productGrid');
+  const visible=products.filter(p=>{
+    return(filters.color==='all'||p.color===filters.color)&&
+           (filters.size==='all'||p.sizes.includes(filters.size))&&
+           (filters.season==='all'||p.season===filters.season);
+  });
+  document.getElementById('resultsLabel').textContent=`Showing ${visible.length} product${visible.length!==1?'s':''}`;
+  grid.innerHTML=visible.map((p,i)=>`
+    <div class="product-card" style="animation:fadeUp 0.6s ease ${i*0.07}s both">
+      <div class="product-img" style="background:#141414">
+        <div class="prod-art">
+          <div class="prod-art-inner">
+            <svg width="150" height="110" viewBox="0 0 150 110" fill="none">
+              <ellipse cx="75" cy="92" rx="72" ry="12" fill="rgba(0,0,0,0.3)"/>
+              <path d="M8 85 Q8 20 75 18 Q142 20 142 85 Z" fill="${p.capColor}" opacity="0.9"/>
+              <path d="M4 86 Q4 14 75 12 Q146 14 146 86" stroke="${p.bandColor}" stroke-width="1.5" fill="none" opacity="0.6"/>
+              <path d="M8 85 Q40 76 75 76 Q110 76 142 85" stroke="${p.bandColor}" stroke-width="1" fill="none" opacity="0.5"/>
+              <path d="M14 81 Q44 73 75 73 Q106 73 136 81" stroke="${p.bandColor}" stroke-width="0.8" fill="none" opacity="0.3"/>
+              <rect x="3" y="83" width="144" height="12" rx="3" fill="${p.bandColor}" opacity="0.2" stroke="${p.bandColor}" stroke-width="0.8" opacity="0.5"/>
+              <text x="75" y="93" text-anchor="middle" font-family="Barlow Condensed" font-size="7" fill="${p.bandColor}" opacity="0.9" letter-spacing="2.5">THORNS</text>
+            </svg>
+          </div>
+        </div>
+        ${p.badge?`<div class="product-season-badge ${p.badge==='New'?'badge-new':p.badge==='Seasonal'?'badge-seasonal':p.badge==='Limited'?'badge-limited':'badge-sale'}">${p.badge}</div>`:''}
+        <div class="product-overlay">
+          <button class="quick-add-btn" onclick="openModal(${p.id},event)">Add to Bag +</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-row-top">
+          <div class="product-name">${p.name}</div>
+          <div class="product-price">£${p.price}</div>
+        </div>
+        <div class="product-desc">${p.desc}</div>
+        <div class="product-meta-row">
+          <div class="product-sizes-row">
+            ${p.sizes.map(s=>`<div class="size-chip">${s}</div>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  if(!visible.length){
+    grid.innerHTML=`<div style="padding:60px 24px;color:var(--grey);font-size:13px;letter-spacing:0.1em;grid-column:1/-1">No products match your selection.</div>`;
+  }
+}
+
+/* Seasonal highlight cards */
+function renderSeasonalCards(){
+  const seasonal=products.filter(p=>p.season==='seasonal').slice(0,4);
+  document.getElementById('seasonalCards').innerHTML=seasonal.map(p=>`
+    <div class="seasonal-card">
+      <div class="seasonal-card-name">${p.name}</div>
+      <div class="seasonal-card-price">£${p.price}</div>
+      <button class="seasonal-card-add" onclick="openModal(${p.id},null)">Add to Bag +</button>
+    </div>
+  `).join('');
+}
+
+/* Filter pills */
+document.querySelectorAll('.pill').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const f=btn.dataset.f,v=btn.dataset.v;
+    document.querySelectorAll(`[data-f="${f}"]`).forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    filters[f]=v;
+    renderProducts();
+  });
+});
+
+function setSeason(btn,val){
+  document.querySelectorAll('.season-tab').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  filters.season=val;
+  renderProducts();
+}
+
+/* ─── MODAL ─── */
+function openModal(id,event){
+  if(event)event.stopPropagation();
+  modalProduct=products.find(p=>p.id===id);
+  selectedSize=null;
+  document.getElementById('mName').textContent=modalProduct.name;
+  document.getElementById('mPrice').textContent=`£${modalProduct.price}`;
+  const btn=document.getElementById('mAddBtn');
+  btn.disabled=true;btn.textContent='Choose a size first';
+  document.getElementById('mSizes').innerHTML=modalProduct.sizes.map(s=>
+    `<div class="sz" onclick="pickSize('${s}',this)">${s}</div>`
+  ).join('');
+  document.getElementById('sizeModal').classList.add('open');
+}
+function pickSize(s,el){
+  document.querySelectorAll('.sz').forEach(d=>d.classList.remove('sel'));
+  el.classList.add('sel');selectedSize=s;
+  const btn=document.getElementById('mAddBtn');
+  btn.disabled=false;btn.textContent=`Add to Bag — £${modalProduct.price}`;
+}
+function closeModal(){document.getElementById('sizeModal').classList.remove('open')}
+function modalBgClick(e){if(e.target===document.getElementById('sizeModal'))closeModal()}
+function addFromModal(){
+  if(!modalProduct||!selectedSize)return;
+  addToCart(modalProduct,selectedSize);
+  closeModal();
+}
+
+/* ─── CART ─── */
+function addToCart(product,size){
+  const key=`${product.id}_${size}`;
+  const ex=cart.find(i=>i.key===key);
+  if(ex)ex.qty++;
+  else cart.push({key,product,size,qty:1});
+  refreshCart();
+  showToast(`${product.name} (${size}) added`);
+  openCart();
+}
+function removeItem(key){cart=cart.filter(i=>i.key!==key);refreshCart()}
+function changeQty(key,d){
+  const item=cart.find(i=>i.key===key);
+  if(!item)return;
+  item.qty+=d;
+  if(item.qty<=0)removeItem(key);
+  else refreshCart();
+}
+function refreshCart(){
+  const total=cart.reduce((s,i)=>s+i.product.price*i.qty,0);
+  const count=cart.reduce((s,i)=>s+i.qty,0);
+  document.getElementById('cartCount').textContent=count;
+  document.getElementById('cartTotal').textContent=`£${total}`;
+  const body=document.getElementById('cartBody');
+  const foot=document.getElementById('cartFoot');
+  if(!cart.length){
+    body.innerHTML=`<div class="cart-empty-state"><div class="empty-icon">◻</div><div class="empty-text">Your bag is empty</div></div>`;
+    foot.style.display='none';
+  } else {
+    foot.style.display='block';
+    body.innerHTML=cart.map(item=>`
+      <div class="cart-item">
+        <div class="cart-item-thumb">${item.product.emoji}</div>
+        <div class="cart-item-details">
+          <div class="cart-item-name">${item.product.name}</div>
+          <div class="cart-item-variant">Size: ${item.size}</div>
+          <div class="cart-item-row">
+            <div class="qty-wrap">
+              <button class="qty-b" onclick="changeQty('${item.key}',-1)">−</button>
+              <div class="qty-val">${item.qty}</div>
+              <button class="qty-b" onclick="changeQty('${item.key}',1)">+</button>
+            </div>
+            <span class="item-price">£${item.product.price*item.qty}</span>
+          </div>
+          <button class="item-remove" onclick="removeItem('${item.key}')">Remove</button>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+function openCart(){
+  document.getElementById('cartOverlay').classList.add('open');
+  document.getElementById('cartDrawer').classList.add('open');
+}
+function closeCart(){
+  document.getElementById('cartOverlay').classList.remove('open');
+  document.getElementById('cartDrawer').classList.remove('open');
+}
+function handleCheckout(){
+  showToast('Connect a payment gateway to enable checkout!');
+  closeCart();
+}
+
+/* ─── NEWSLETTER ─── */
+function submitNewsletter(e){
+  e.preventDefault();
+  const name=document.getElementById('nlName').value;
+  showToast(`Welcome to Thorns${name?' '+name:''}! 👑`);
+  e.target.reset();
+}
+
+/* ─── TOAST ─── */
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+/* ─── SCROLL REVEAL ─── */
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+/* ─── INIT ─── */
+renderProducts();
+renderSeasonalCards();
+refreshCart();
+</script>
+</body>
+</html>
